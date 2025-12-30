@@ -122,6 +122,28 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
     def __init__(
             self, learning_rate_base, total_steps, warmup_learning_rate, warmup_steps
     ):
+        """Init.
+        
+        Args:
+            learning_rate_base: Parameter.
+            total_steps: Parameter.
+            warmup_learning_rate: Parameter.
+            warmup_steps: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            learning_rate_base: Parameter.
+            total_steps: Parameter.
+            warmup_learning_rate: Parameter.
+            warmup_steps: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(WarmUpCosine, self).__init__()
 
         self.learning_rate_base = learning_rate_base
@@ -131,6 +153,22 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
         self.pi = tf.constant(np.pi)
 
     def __call__(self, step):
+        """Call.
+        
+        Args:
+            step: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            step: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         if self.total_steps < self.warmup_steps:
             raise ValueError("Total_steps must be larger or equal to warmup_steps.")
         learning_rate = (
@@ -165,6 +203,18 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
 
 
 def split_data(data_folder, perc_train, perc_val_of_train, perc_test, merge=False):
+    """Split the dataset into train/validation/test video lists and labels.
+    
+    Args:
+        data_folder: Parameter.
+        perc_train: Parameter.
+        perc_val_of_train: Parameter.
+        perc_test: Parameter.
+        merge: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     dirs = os.listdir(data_folder)
 
     train_files, train_labels = [], []
@@ -301,6 +351,18 @@ def split_data(data_folder, perc_train, perc_val_of_train, perc_test, merge=Fals
             class_count, class_lookup, class_vid_count, excluded_cnt)
 
 def split_data_temp(data_folder, train_txt, val_txt, test_txt, merge=False):
+    """Split the dataset into train/validation/test video lists and labels.
+    
+    Args:
+        data_folder: Parameter.
+        train_txt: Parameter.
+        val_txt: Parameter.
+        test_txt: Parameter.
+        merge: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     train_dict, val_dict, test_dict = {}, {}, {}
     train_list, val_list, test_list=[],[],[]
     with open(train_txt) as file:
@@ -461,6 +523,14 @@ def split_data_temp(data_folder, train_txt, val_txt, test_txt, merge=False):
 
 
 def process_video_only(video_file):
+    """Process video only.
+    
+    Args:
+        video_file: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     frames = []
     for i in range(0, MIN_FRAMES, SKIP_FRAMES):
         frame = tf.strings.as_string(f'_{str(i).zfill(4)}.png')
@@ -482,10 +552,29 @@ def process_video_only(video_file):
 
 
 def process_video_and_label(video_file, label):
+    """Process video and label.
+    
+    Args:
+        video_file: Parameter.
+        label: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     return process_video_only(video_file), label
 
 
 def get_augmenter_echo(image_size, min_area, rotation):
+    """Get augmenter echo.
+    
+    Args:
+        image_size: Target size.
+        min_area: Parameter.
+        rotation: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     zoom_factor = 1.0 - math.sqrt(min_area)
     return keras.Sequential(
         [
@@ -500,6 +589,20 @@ def get_augmenter_echo(image_size, min_area, rotation):
 def get_tf_datasets(train_files, train_labels,
                     val_files, val_labels,
                     test_files, test_labels, augmentation=False):
+    """Get tf datasets.
+    
+    Args:
+        train_files: Parameter.
+        train_labels: Parameter.
+        val_files: Parameter.
+        val_labels: Parameter.
+        test_files: Parameter.
+        test_labels: Parameter.
+        augmentation: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     train_ds = tf.data.Dataset.from_tensor_slices((train_files, train_labels))
     train_ds = train_ds.map(process_video_and_label, num_parallel_calls=tf.data.AUTOTUNE)
     train_ds = train_ds.shuffle(buffer_size=BATCH_SIZE * 10).batch(BATCH_SIZE)
@@ -539,6 +642,36 @@ def clean_files(files_list):
 
 class VideoAug(tf.keras.layers.Layer):
     def __init__(self, numframes, height, width, num_channels, min_area, rotation, name=None, **kwargs):
+        """Init.
+        
+        Args:
+            numframes: Parameter.
+            height: Parameter.
+            width: Parameter.
+            num_channels: Parameter.
+            min_area: Parameter.
+            rotation: Parameter.
+            name: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            numframes: Parameter.
+            height: Parameter.
+            width: Parameter.
+            num_channels: Parameter.
+            min_area: Parameter.
+            rotation: Parameter.
+            name: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
         super().__init__()
         self.numframes=numframes
         self.height = height
@@ -556,6 +689,16 @@ class VideoAug(tf.keras.layers.Layer):
         )
 
     def get_config(self):
+        """Get config.
+        
+        Returns:
+            object: Return value.
+        """
+        """Get config.
+        
+        Returns:
+            object: Return value.
+        """
         config = super(VideoAug, self).get_config()
         config.update({"numframes": self.numframes,
                        "height": self.height,
@@ -601,6 +744,17 @@ class VideoAug(tf.keras.layers.Layer):
 
 @tf.function
 def tf_shuffle_axis(value, axis=0, seed=None, name=None):
+    """Tf shuffle axis.
+    
+    Args:
+        value: Parameter.
+        axis: Parameter.
+        seed: Parameter.
+        name: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     perm = list(tf.range(tf.rank(value)))
     perm[axis], perm[0] = perm[0], perm[axis]
     value = tf.random.shuffle(tf.transpose(value, perm=perm))
@@ -609,25 +763,115 @@ def tf_shuffle_axis(value, axis=0, seed=None, name=None):
 
 class RollingLayer(tf.keras.layers.Layer):
     def __init__(self):
+        """Init.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Returns:
+            None: Return value.
+        """
         super(RollingLayer, self).__init__()
 
     def build(self, input_shape):
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(RollingLayer, self).build(input_shape)
 
     def call(self, inputs):
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         rand = tf.random.uniform(shape=(), minval=0, maxval=MIN_FRAMES-1, dtype=tf.int32)
         rolled = tf.roll(inputs, rand, axis=1) #skip batch dim
         return rolled
 
 class RandomDropLayer(tf.keras.layers.Layer):
     def __init__(self, rows):
+        """Init.
+        
+        Args:
+            rows: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            rows: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(RandomDropLayer, self).__init__()
         self.rows = rows
 
     def build(self, input_shape):
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(RandomDropLayer, self).build(input_shape)
 
     def call(self, inputs):
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         shape = tf.shape(inputs)
         rng = tf.range(self.rows)
         rand = tf.random.shuffle(rng)
@@ -652,6 +896,20 @@ class RandomDropLayer(tf.keras.layers.Layer):
 
 
 def train_model(train_ds, val_ds, output_folder, run_index, num_train, model_file, linear_eval):
+    """Train model.
+    
+    Args:
+        train_ds: Parameter.
+        val_ds: Parameter.
+        output_folder: Parameter.
+        run_index: Parameter.
+        num_train: Parameter.
+        model_file: Parameter.
+        linear_eval: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     model = None
     encoder = tf.keras.models.load_model(model_file, custom_objects={'WarmUpCosine': WarmUpCosine,
                                                                      'VideoAug':VideoAug,
@@ -756,6 +1014,15 @@ def train_model(train_ds, val_ds, output_folder, run_index, num_train, model_fil
 
 
 def write_video_frames(avi_file, output_frames_path):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        avi_file: Parameter.
+        output_frames_path: File or directory path.
+    
+    Returns:
+        None: Return value.
+    """
     cam = cv2.VideoCapture(avi_file)
 
     avi_name = os.path.basename(avi_file)
@@ -771,7 +1038,6 @@ def write_video_frames(avi_file, output_frames_path):
             if os.path.exists(frame_path):
                 continue
 
-            # if video is still left continue creating images
 
             cv2.imwrite(frame_path, frame)
             frameno += 1
@@ -783,6 +1049,14 @@ def write_video_frames(avi_file, output_frames_path):
 
 
 def prepare_video_data(data_folder):
+    """Prepare video data.
+    
+    Args:
+        data_folder: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     output_images_folder = r'Data/Unity-Classification-A-Frames'
     #    return
 
@@ -831,6 +1105,17 @@ def prepare_video_data(data_folder):
     return
 
 def get_second_labels(second_labels_file, test_files, test_labels, class_lookup):
+    """Get second labels.
+    
+    Args:
+        second_labels_file: Parameter.
+        test_files: Parameter.
+        test_labels: Parameter.
+        class_lookup: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     rev_lookup = dict((v, k) for k, v in class_lookup.items())
     test_labels2 = []
     file_class_dict = {}
@@ -884,6 +1169,15 @@ def get_second_labels(second_labels_file, test_files, test_labels, class_lookup)
 
 
 def draw_plots(save_folder, epochs_to_test):
+    """Draw plots.
+    
+    Args:
+        save_folder: Parameter.
+        epochs_to_test: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
 
     dirs = os.listdir(save_folder)
 
@@ -896,8 +1190,6 @@ def draw_plots(save_folder, epochs_to_test):
         if 'plot' in dir:
             continue
 
-        # if not 'supcon' in dir:
-        #     if not 'imagenetTrue' in dir:
         #         continue
 
         results_dir = os.listdir(exp_dir)
@@ -958,7 +1250,6 @@ def draw_plots(save_folder, epochs_to_test):
     plt.yticks(fontsize=tick_size)
 
     # Set current axis
-    # Because plt.axes adds an Axes to the current figure and makes it the current Axes.
     # To set the current axes, where ax is the Axes object you'd like to become active:
 
     # PLOT LEGEND
@@ -987,7 +1278,6 @@ def draw_plots(save_folder, epochs_to_test):
     plt.yticks(fontsize=tick_size)
 
     # Set current axis
-    # Because plt.axes adds an Axes to the current figure and makes it the current Axes.
     # To set the current axes, where ax is the Axes object you'd like to become active:
     plt.sca(ax)
 
@@ -1026,6 +1316,19 @@ def remove_layers(model, remove_indices):
 
 
 def evaluate(save_folder, class_lookup, model_file, test_files, test_labels, run):
+    """Evaluate.
+    
+    Args:
+        save_folder: Parameter.
+        class_lookup: Parameter.
+        model_file: Parameter.
+        test_files: Parameter.
+        test_labels: Parameter.
+        run: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     if not os.path.exists(save_folder):
         os.mkdir(save_folder)
 
@@ -1086,6 +1389,11 @@ def evaluate(save_folder, class_lookup, model_file, test_files, test_labels, run
     utils.write_dict_to_json(class_report, save_folder, f'classification_report_run{run}.json')
 
 def main():
+    """Main.
+    
+    Returns:
+        None: Return value.
+    """
     random.seed(444)
 
     global TOTAL_FRAMES

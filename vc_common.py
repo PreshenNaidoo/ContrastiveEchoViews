@@ -100,6 +100,28 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
     def __init__(
             self, learning_rate_base, total_steps, warmup_learning_rate, warmup_steps
     ):
+        """Init.
+        
+        Args:
+            learning_rate_base: Parameter.
+            total_steps: Parameter.
+            warmup_learning_rate: Parameter.
+            warmup_steps: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            learning_rate_base: Parameter.
+            total_steps: Parameter.
+            warmup_learning_rate: Parameter.
+            warmup_steps: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(WarmUpCosine, self).__init__()
 
         self.learning_rate_base = learning_rate_base
@@ -109,6 +131,22 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
         self.pi = tf.constant(np.pi)
 
     def __call__(self, step):
+        """Call.
+        
+        Args:
+            step: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            step: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         if self.total_steps < self.warmup_steps:
             raise ValueError("Total_steps must be larger or equal to warmup_steps.")
         learning_rate = (
@@ -143,6 +181,18 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
 
 
 def split_data(data_folder, perc_train, perc_val_of_train, perc_test, merge=False):
+    """Split the dataset into train/validation/test video lists and labels.
+    
+    Args:
+        data_folder: Parameter.
+        perc_train: Parameter.
+        perc_val_of_train: Parameter.
+        perc_test: Parameter.
+        merge: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     dirs = os.listdir(data_folder)
 
     train_files, train_labels = [], []
@@ -279,6 +329,18 @@ def split_data(data_folder, perc_train, perc_val_of_train, perc_test, merge=Fals
             class_count, class_lookup, class_vid_count, excluded_cnt)
 
 def split_data_temp(data_folder, train_txt, val_txt, test_txt, merge=False):
+    """Split the dataset into train/validation/test video lists and labels.
+    
+    Args:
+        data_folder: Parameter.
+        train_txt: Parameter.
+        val_txt: Parameter.
+        test_txt: Parameter.
+        merge: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     train_dict, val_dict, test_dict = {}, {}, {}
     train_list, val_list, test_list=[],[],[]
     with open(train_txt) as file:

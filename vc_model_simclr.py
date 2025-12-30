@@ -31,6 +31,22 @@ AUG_SEGMENTATION = {
 # Define the contrastive model with model-subclassing
 class SimCLR_Contrastive_Model(keras.Model):
     def __init__(self, encoder):
+        """Init.
+        
+        Args:
+            encoder: Backbone encoder network.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            encoder: Backbone encoder network.
+        
+        Returns:
+            None: Return value.
+        """
         super().__init__()
 
         self.temperature = TEMPERATURE
@@ -56,6 +72,24 @@ class SimCLR_Contrastive_Model(keras.Model):
         self.projection_head.summary()
 
     def compile(self, contrastive_optimizer, **kwargs):
+        """Configure the model for training.
+        
+        Args:
+            contrastive_optimizer: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
+        """Configure the model for training.
+        
+        Args:
+            contrastive_optimizer: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
         super().compile(**kwargs)
 
         self.contrastive_optimizer = contrastive_optimizer
@@ -65,6 +99,16 @@ class SimCLR_Contrastive_Model(keras.Model):
 
     @property
     def metrics(self):
+        """Return the list of tracked Keras metrics.
+        
+        Returns:
+            tuple | list: Return value.
+        """
+        """Return the list of tracked Keras metrics.
+        
+        Returns:
+            tuple | list: Return value.
+        """
         return [
             self.contrastive_loss_tracker,
         ]
@@ -76,9 +120,26 @@ class SimCLR_Contrastive_Model(keras.Model):
     #
     #
     #
-    #     return loss
 
     def contrastive_loss(self, projections_1, projections_2):
+        """Compute the SimCLR NT-Xent / InfoNCE contrastive loss.
+        
+        Args:
+            projections_1: Parameter.
+            projections_2: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Compute the SimCLR NT-Xent / InfoNCE contrastive loss.
+        
+        Args:
+            projections_1: Parameter.
+            projections_2: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         # InfoNCE loss (information noise-contrastive estimation)
         # NT-Xent loss (normalized temperature-scaled cross entropy)
 
@@ -105,6 +166,22 @@ class SimCLR_Contrastive_Model(keras.Model):
         return (loss_1_2 + loss_2_1) / 2
 
     def train_step(self, data):
+        """Keras training/evaluation step implementation.
+        
+        Args:
+            data: Input batch/dataset.
+        
+        Returns:
+            object: Return value.
+        """
+        """Keras training/evaluation step implementation.
+        
+        Args:
+            data: Input batch/dataset.
+        
+        Returns:
+            object: Return value.
+        """
         images = data #first axis is the batch
 
         # Each image is augmented twice, differently
@@ -134,6 +211,22 @@ class SimCLR_Contrastive_Model(keras.Model):
         return {m.name: m.result() for m in self.metrics}
 
     def test_step(self, data):
+        """Keras training/evaluation step implementation.
+        
+        Args:
+            data: Input batch/dataset.
+        
+        Returns:
+            object: Return value.
+        """
+        """Keras training/evaluation step implementation.
+        
+        Args:
+            data: Input batch/dataset.
+        
+        Returns:
+            object: Return value.
+        """
         images = data  # first axis is the batch
 
         # Each image is augmented twice, differently
@@ -152,5 +245,27 @@ class SimCLR_Contrastive_Model(keras.Model):
         return {m.name: m.result() for m in self.metrics}
 
     def save(self, filepath, overwrite=True, save_format=None, **kwargs):
+        """Save the underlying encoder weights to disk.
+        
+        Args:
+            filepath: File or directory path.
+            overwrite: Parameter.
+            save_format: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
+        """Save the underlying encoder weights to disk.
+        
+        Args:
+            filepath: File or directory path.
+            overwrite: Parameter.
+            save_format: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
         print(f'\n **SAVED MODEL: f{filepath} \n')
         self.encoder.save(filepath, overwrite, save_format)

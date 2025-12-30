@@ -125,6 +125,28 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
     def __init__(
             self, learning_rate_base, total_steps, warmup_learning_rate, warmup_steps
     ):
+        """Init.
+        
+        Args:
+            learning_rate_base: Parameter.
+            total_steps: Parameter.
+            warmup_learning_rate: Parameter.
+            warmup_steps: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            learning_rate_base: Parameter.
+            total_steps: Parameter.
+            warmup_learning_rate: Parameter.
+            warmup_steps: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(WarmUpCosine, self).__init__()
 
         self.learning_rate_base = learning_rate_base
@@ -134,6 +156,22 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
         self.pi = tf.constant(np.pi)
 
     def __call__(self, step):
+        """Call.
+        
+        Args:
+            step: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            step: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         if self.total_steps < self.warmup_steps:
             raise ValueError("Total_steps must be larger or equal to warmup_steps.")
         learning_rate = (
@@ -168,6 +206,18 @@ class WarmUpCosine(tf.keras.optimizers.schedules.LearningRateSchedule):
 
 
 def split_data(data_folder, perc_train, perc_val_of_train, perc_test, merge=False):
+    """Split the dataset into train/validation/test video lists and labels.
+    
+    Args:
+        data_folder: Parameter.
+        perc_train: Parameter.
+        perc_val_of_train: Parameter.
+        perc_test: Parameter.
+        merge: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     dirs = os.listdir(data_folder)
 
     train_files, train_labels = [], []
@@ -304,6 +354,18 @@ def split_data(data_folder, perc_train, perc_val_of_train, perc_test, merge=Fals
             class_count, class_lookup, class_vid_count, excluded_cnt)
 
 def split_data_temp(data_folder, train_txt, val_txt, test_txt, merge=False):
+    """Split the dataset into train/validation/test video lists and labels.
+    
+    Args:
+        data_folder: Parameter.
+        train_txt: Parameter.
+        val_txt: Parameter.
+        test_txt: Parameter.
+        merge: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     train_dict, val_dict, test_dict = {}, {}, {}
     train_list, val_list, test_list=[],[],[]
     with open(train_txt) as file:
@@ -464,6 +526,14 @@ def split_data_temp(data_folder, train_txt, val_txt, test_txt, merge=False):
 
 
 def process_video_only(video_file):
+    """Process video only.
+    
+    Args:
+        video_file: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     frames = []
     for i in range(0, MIN_FRAMES, SKIP_FRAMES):
         frame = tf.strings.as_string(f'_{str(i).zfill(4)}.png')
@@ -487,10 +557,29 @@ def process_video_only(video_file):
 
 
 def process_video_and_label(video_file, label):
+    """Process video and label.
+    
+    Args:
+        video_file: Parameter.
+        label: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     return process_video_only(video_file), label
 
 
 def get_augmenter_echo(image_size, min_area, rotation):
+    """Get augmenter echo.
+    
+    Args:
+        image_size: Target size.
+        min_area: Parameter.
+        rotation: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     zoom_factor = 1.0 - math.sqrt(min_area)
     return tf.keras.Sequential(
         [
@@ -505,6 +594,20 @@ def get_augmenter_echo(image_size, min_area, rotation):
 def get_tf_datasets(train_files, train_labels,
                     val_files, val_labels,
                     test_files, test_labels, augmentation=False):
+    """Get tf datasets.
+    
+    Args:
+        train_files: Parameter.
+        train_labels: Parameter.
+        val_files: Parameter.
+        val_labels: Parameter.
+        test_files: Parameter.
+        test_labels: Parameter.
+        augmentation: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     train_ds = tf.data.Dataset.from_tensor_slices((train_files, train_labels))
     train_ds = train_ds.map(process_video_and_label, num_parallel_calls=tf.data.AUTOTUNE)
     train_ds = train_ds.shuffle(buffer_size=BATCH_SIZE * 10).batch(BATCH_SIZE)
@@ -545,6 +648,36 @@ def clean_files(files_list):
 
 class VideoAug(tf.keras.layers.Layer):
     def __init__(self, numframes, height, width, num_channels, min_area, rotation, name=None, **kwargs):
+        """Init.
+        
+        Args:
+            numframes: Parameter.
+            height: Parameter.
+            width: Parameter.
+            num_channels: Parameter.
+            min_area: Parameter.
+            rotation: Parameter.
+            name: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            numframes: Parameter.
+            height: Parameter.
+            width: Parameter.
+            num_channels: Parameter.
+            min_area: Parameter.
+            rotation: Parameter.
+            name: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
         super().__init__()
         self.numframes=numframes
         self.height = height
@@ -562,6 +695,16 @@ class VideoAug(tf.keras.layers.Layer):
         )
 
     def get_config(self):
+        """Get config.
+        
+        Returns:
+            object: Return value.
+        """
+        """Get config.
+        
+        Returns:
+            object: Return value.
+        """
         config = super(VideoAug, self).get_config()
         config.update({"numframes": self.numframes,
                        "height": self.height,
@@ -607,6 +750,17 @@ class VideoAug(tf.keras.layers.Layer):
 
 @tf.function
 def tf_shuffle_axis(value, axis=0, seed=None, name=None):
+    """Tf shuffle axis.
+    
+    Args:
+        value: Parameter.
+        axis: Parameter.
+        seed: Parameter.
+        name: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     perm = list(tf.range(tf.rank(value)))
     perm[axis], perm[0] = perm[0], perm[axis]
     value = tf.random.shuffle(tf.transpose(value, perm=perm))
@@ -615,26 +769,116 @@ def tf_shuffle_axis(value, axis=0, seed=None, name=None):
 
 class RollingLayer(tf.keras.layers.Layer):
     def __init__(self):
+        """Init.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Returns:
+            None: Return value.
+        """
         super(RollingLayer, self).__init__()
 
     def build(self, input_shape):
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(RollingLayer, self).build(input_shape)
 
     def call(self, inputs):
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         rand = tf.random.uniform(shape=(), minval=1, maxval=(TOTAL_FRAMES)-1, dtype=tf.int32)
         rolled = tf.roll(inputs, rand, axis=1) #skip batch dim
         return rolled
 
 class RandomDropLayer(tf.keras.layers.Layer):
     def __init__(self, rows):
+        """Init.
+        
+        Args:
+            rows: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            rows: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(RandomDropLayer, self).__init__()
         self.rows = rows
 
     def build(self, input_shape):
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Build.
+        
+        Args:
+            input_shape: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         super(RandomDropLayer, self).build(input_shape)
 
 
     def call(self, inputs):
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Call.
+        
+        Args:
+            inputs: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         shape = tf.shape(inputs)
         rng = tf.range(self.rows)
         rand = tf.random.shuffle(rng)
@@ -663,6 +907,22 @@ class RandomDropLayer(tf.keras.layers.Layer):
 # Define the contrastive model with model-subclassing
 class Contrastive_Model(tf.keras.Model):
     def __init__(self, encoder):
+        """Init.
+        
+        Args:
+            encoder: Backbone encoder network.
+        
+        Returns:
+            None: Return value.
+        """
+        """Init.
+        
+        Args:
+            encoder: Backbone encoder network.
+        
+        Returns:
+            None: Return value.
+        """
         super().__init__()
 
         self.temperature = TEMPERATURE
@@ -704,6 +964,24 @@ class Contrastive_Model(tf.keras.Model):
         self.projection_head.summary()
 
     def compile(self, contrastive_optimizer, **kwargs):
+        """Configure the model for training.
+        
+        Args:
+            contrastive_optimizer: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
+        """Configure the model for training.
+        
+        Args:
+            contrastive_optimizer: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
         super().compile(**kwargs)
 
         self.contrastive_optimizer = contrastive_optimizer
@@ -713,6 +991,16 @@ class Contrastive_Model(tf.keras.Model):
 
     @property
     def metrics(self):
+        """Return the list of tracked Keras metrics.
+        
+        Returns:
+            tuple | list: Return value.
+        """
+        """Return the list of tracked Keras metrics.
+        
+        Returns:
+            tuple | list: Return value.
+        """
         return [
             self.contrastive_loss_tracker,
         ]
@@ -724,9 +1012,26 @@ class Contrastive_Model(tf.keras.Model):
     #
     #
     #
-    #     return loss
 
     def contrastive_loss(self, projections_1, projections_2):
+        """Compute the SimCLR NT-Xent / InfoNCE contrastive loss.
+        
+        Args:
+            projections_1: Parameter.
+            projections_2: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
+        """Compute the SimCLR NT-Xent / InfoNCE contrastive loss.
+        
+        Args:
+            projections_1: Parameter.
+            projections_2: Parameter.
+        
+        Returns:
+            object: Return value.
+        """
         # InfoNCE loss (information noise-contrastive estimation)
         # NT-Xent loss (normalized temperature-scaled cross entropy)
 
@@ -753,6 +1058,22 @@ class Contrastive_Model(tf.keras.Model):
         return (loss_1_2 + loss_2_1) / 2
 
     def train_step(self, data):
+        """Keras training/evaluation step implementation.
+        
+        Args:
+            data: Input batch/dataset.
+        
+        Returns:
+            object: Return value.
+        """
+        """Keras training/evaluation step implementation.
+        
+        Args:
+            data: Input batch/dataset.
+        
+        Returns:
+            object: Return value.
+        """
         images = data #first axis is the batch
 
         # Each image is augmented twice, differently
@@ -797,14 +1118,68 @@ class Contrastive_Model(tf.keras.Model):
     #
 
     def save_weights(self, filepath, overwrite=True):
+        """Save weights.
+        
+        Args:
+            filepath: File or directory path.
+            overwrite: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
+        """Save weights.
+        
+        Args:
+            filepath: File or directory path.
+            overwrite: Parameter.
+        
+        Returns:
+            None: Return value.
+        """
         print(f'\n **SAVED WEIGHTS: f{filepath} \n')
         self.encoder.save_weights(filepath, overwrite)
 
     def save(self, filepath, overwrite=True, save_format=None, **kwargs):
+        """Save the underlying encoder weights to disk.
+        
+        Args:
+            filepath: File or directory path.
+            overwrite: Parameter.
+            save_format: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
+        """Save the underlying encoder weights to disk.
+        
+        Args:
+            filepath: File or directory path.
+            overwrite: Parameter.
+            save_format: Parameter.
+            kwargs: Additional keyword arguments.
+        
+        Returns:
+            None: Return value.
+        """
         print(f'\n **SAVED MODEL: f{filepath} \n')
         self.vid_model.save(filepath, overwrite, save_format)
 
 def train_model(train_ds, val_ds, output_folder, backbone, run_index, num_train, use_imagenet_weights):
+    """Train model.
+    
+    Args:
+        train_ds: Parameter.
+        val_ds: Parameter.
+        output_folder: Parameter.
+        backbone: Parameter.
+        run_index: Parameter.
+        num_train: Parameter.
+        use_imagenet_weights: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     model = None
     weight_file = os.path.join(os.path.join(output_folder, 'ssl'), 'encoder_model_weights.h5')
     model_file = os.path.join(os.path.join(output_folder, 'ssl'), 'encoder_model.h5')
@@ -884,6 +1259,15 @@ def train_model(train_ds, val_ds, output_folder, backbone, run_index, num_train,
 
 
 def write_video_frames(avi_file, output_frames_path):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        avi_file: Parameter.
+        output_frames_path: File or directory path.
+    
+    Returns:
+        None: Return value.
+    """
     cam = cv2.VideoCapture(avi_file)
 
     avi_name = os.path.basename(avi_file)
@@ -899,7 +1283,6 @@ def write_video_frames(avi_file, output_frames_path):
             if os.path.exists(frame_path):
                 continue
 
-            # if video is still left continue creating images
 
             cv2.imwrite(frame_path, frame)
             frameno += 1
@@ -911,6 +1294,14 @@ def write_video_frames(avi_file, output_frames_path):
 
 
 def prepare_video_data(data_folder):
+    """Prepare video data.
+    
+    Args:
+        data_folder: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     output_images_folder = r'Data/Unity-Classification-A-Frames'
     #    return
 
@@ -959,6 +1350,17 @@ def prepare_video_data(data_folder):
     return
 
 def plot_tsne(predictions, color_list, labels_list, save_file):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        predictions: Parameter.
+        color_list: Parameter.
+        labels_list: Parameter.
+        save_file: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     tsne = TSNE(n_components=2)
     trans_dim = tsne.fit_transform(predictions)
     x = trans_dim[0:, 0]
@@ -976,6 +1378,17 @@ def plot_tsne(predictions, color_list, labels_list, save_file):
 
 
 def plot_pca(predictions, color_list, labels_list, save_file):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        predictions: Parameter.
+        color_list: Parameter.
+        labels_list: Parameter.
+        save_file: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     pca = PCA(n_components=2)
     trans_dim = pca.fit_transform(predictions)
     x = trans_dim[0:, 0]
@@ -990,6 +1403,15 @@ def plot_pca(predictions, color_list, labels_list, save_file):
     plt.savefig(save_file, dpi=300, bbox_inches='tight')
 
 def select_random_files_from_list(files_list, num_to_select):
+    """Select random files from list.
+    
+    Args:
+        files_list: Parameter.
+        num_to_select: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     select_files = []
     used_index = {}
     for i in range(num_to_select*100):
@@ -1002,6 +1424,19 @@ def select_random_files_from_list(files_list, num_to_select):
     return select_files
 
 def save_cosine_sim_heatmap(model, class_indices, lookup_label_dict, select_count, labels, save_name):
+    """Save cosine sim heatmap.
+    
+    Args:
+        model: Parameter.
+        class_indices: Parameter.
+        lookup_label_dict: Parameter.
+        select_count: Parameter.
+        labels: Parameter.
+        save_name: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     random.seed(2) #to select the same examples on every run
 
     select_files = []
@@ -1043,6 +1478,11 @@ def save_cosine_sim_heatmap(model, class_indices, lookup_label_dict, select_coun
     plt.savefig(save_name, dpi=300, bbox_inches='tight')
 
 def main():
+    """Main.
+    
+    Returns:
+        None: Return value.
+    """
     # return
 
     random.seed(444)

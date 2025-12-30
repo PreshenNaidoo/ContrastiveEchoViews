@@ -16,6 +16,15 @@ import numpy as np
 from mask_volume import *
 
 def pad_resize_preserve_aspect_ratio(img, size=1024):
+    """Resize an image while preserving aspect ratio and pad to a square canvas.
+    
+    Args:
+        img: Input image.
+        size: Target size.
+    
+    Returns:
+        object: Return value.
+    """
     desired_size = size
 
     im = img.copy()
@@ -39,6 +48,16 @@ def pad_resize_preserve_aspect_ratio(img, size=1024):
     return new_img
 
 def plot_loss_per_epoch_skip(history, save_file_path, skip):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        history: Keras History object.
+        save_file_path: File or directory path.
+        skip: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     plt.clf()
     loss = history.history['loss']
     val_loss = history.history['val_loss']
@@ -54,6 +73,17 @@ def plot_loss_per_epoch_skip(history, save_file_path, skip):
     plt.clf()
 
 def plot_loss_per_epoch_skip_np(loss, val_loss, save_file_path, skip):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        loss: Parameter.
+        val_loss: Parameter.
+        save_file_path: File or directory path.
+        skip: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     plt.clf()
     epochs = [i for i in range(skip, len(loss))]
     plt.plot(epochs, loss[skip:], '-*', label='Training loss')
@@ -67,11 +97,30 @@ def plot_loss_per_epoch_skip_np(loss, val_loss, save_file_path, skip):
     plt.clf()
 
 def plot_model(model, model_plot_name, show_summary = True):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        model: Parameter.
+        model_plot_name: Parameter.
+        show_summary: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     if show_summary:
         model.summary()
     tf.keras.utils.plot_model(model, to_file=model_plot_name, show_shapes = True, show_dtype = True)
 
 def display_training_data(exp_folder, training_dataset):
+    """Visualize a small sample of data for quick sanity-checking.
+    
+    Args:
+        exp_folder: Parameter.
+        training_dataset: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     image_batch, label_batch = next(iter(training_dataset))
 
     print(image_batch.shape)
@@ -104,6 +153,11 @@ def display_training_data(exp_folder, training_dataset):
 
 
 def write_comparisons():
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Returns:
+        None: Return value.
+    """
     compare_methods()
 
     compare_batches(1900)
@@ -115,12 +169,27 @@ def write_comparisons():
 
 
 def write_comparisons_camus():
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Returns:
+        None: Return value.
+    """
     compare_methods_camus()
 
 def write_comparisons_echonet():
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Returns:
+        None: Return value.
+    """
     compare_methods_echonet()
 
 def compare_baseline():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Baseline comparison'
 
     if not os.path.exists(save_folder):
@@ -200,6 +269,11 @@ def compare_baseline():
 
 
 def compare_diff_unlabelled_sets():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Rotation for Diff Unlabelled Sets'
 
     if not os.path.exists(save_folder):
@@ -303,6 +377,11 @@ def compare_diff_unlabelled_sets():
 
 
 def compare_temp():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of TEMP'
 
     if not os.path.exists(save_folder):
@@ -400,6 +479,11 @@ def compare_temp():
 
 
 def compare_leastrep():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Different Methods Compared leastrep'
 
     main_folders = [
@@ -448,6 +532,11 @@ def compare_leastrep():
                                          linestyle_dict=None, bar_width=0.14)
 
 def compare_patches():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Masks'
 
     main_folders = [  # 'run_Patch_unet_bce_False_batch16',
@@ -471,6 +560,11 @@ def compare_patches():
 
 
 def compare_methods():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Different Methods Compared'
 
     main_folders = [
@@ -521,6 +615,11 @@ def compare_methods():
 
 
 def compare_methods_camus():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Different Methods Compared Camus'
 
     main_folders = [
@@ -555,6 +654,11 @@ def compare_methods_camus():
     write_results_for_methods_comparison_new_plots_test_only(save_folder, main_folders, names, 1900, True, colours_dict, linestyle_dict=None, baseline_folder = 'Baseline_444_Final_camus')
 
 def compare_methods_echonet():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     save_folder = 'Results of Different Methods Compared Echonet'
 
     main_folders = [
@@ -590,6 +694,14 @@ def compare_methods_echonet():
 
 
 def compare_batches(pretraining_size):
+    """Aggregate experiment results and generate comparison plots.
+    
+    Args:
+        pretraining_size: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     #
     #
     #
@@ -623,6 +735,11 @@ def compare_batches(pretraining_size):
 
 
 def compare_enc_vs_full():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     # encoder vs full unet:
     save_folder = 'Results Enc vs Full'
 
@@ -649,6 +766,11 @@ def compare_enc_vs_full():
                                                    linestyle_dict=linestyle_dict, baseline_folder='Baseline_444_Final')
 
 def compare_unlabelled_sets():
+    """Aggregate experiment results and generate comparison plots.
+    
+    Returns:
+        None: Return value.
+    """
     # encoder vs full unet:
     save_folder = 'Results unlabelled sets'
 
@@ -681,6 +803,15 @@ def compare_unlabelled_sets():
 
 
 def get_baseline_scores_df(scores_folder, baseline_folder='Baseline_444_Final'):
+    """Get baseline scores df.
+    
+    Args:
+        scores_folder: Parameter.
+        baseline_folder: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     df_base = pd.DataFrame(
         columns=['percentage_unlabelled', 'num_unlabelled',  # not used, just for combining dataframes later
                  'percentage_train', 'train',
@@ -818,6 +949,16 @@ def get_baseline_scores_df(scores_folder, baseline_folder='Baseline_444_Final'):
 
 
 def axis_break(axis, xpos=[0.1, 0.125], slant=1.5):
+    """Axis break.
+    
+    Args:
+        axis: Parameter.
+        xpos: Parameter.
+        slant: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     d = slant  # proportion of vertical to horizontal extent of the slanted line
     anchor = (xpos[0], -0.05)
     w = xpos[1] - xpos[0]
@@ -834,6 +975,15 @@ def axis_break(axis, xpos=[0.1, 0.125], slant=1.5):
 
 
 def export_legend(legend, filename="legend.png"):
+    """Export legend.
+    
+    Args:
+        legend: Parameter.
+        filename: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     fig  = legend.figure
     fig.canvas.draw()
     bbox  = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
@@ -844,6 +994,18 @@ def plot_graph_for_downstream_scores_combined(save_folder,
                                               df_baseline, enc_df_dict,
                                               colours_dict = None, linestyle_dict=None,
                                               ):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        save_folder: Parameter.
+        df_baseline: Parameter.
+        enc_df_dict: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
@@ -972,6 +1134,18 @@ def plot_graph_for_downstream_scores_combined_test_only(save_folder,
                                               df_baseline, enc_df_dict,
                                               colours_dict = None, linestyle_dict=None,
                                               ):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        save_folder: Parameter.
+        df_baseline: Parameter.
+        enc_df_dict: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
@@ -1105,6 +1279,18 @@ def plot_graph_for_downstream_scores_combined1(save_folder,
                                               df_baseline, enc_df_dict,
                                               colours_dict = None, linestyle_dict=None,
                                               ):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        save_folder: Parameter.
+        df_baseline: Parameter.
+        enc_df_dict: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     data = {}
     data["% (No.)"] = ["1 (20)", "2 (41)", "3 (61)", "4 (82)", "5 (102)", "10 (205)", "15 (308)", "25 (514)", "100 (2057)"]
 
@@ -1163,7 +1349,6 @@ def plot_graph_for_downstream_scores_combined1(save_folder,
                         x in df["% (No.)"].values]
             label_name = col.replace(title.split()[0], "").strip()  # Remove dataset name, keep SSL type
             colour = colours_dict[label_name]
-            # if linestyle_dict is not None:
             ax.plot(adjusted_positions, y_values, marker='o', label=label_name, linewidth=2, markersize=6, color=colour)
 
         ax.set_title(title, fontsize=title_size)#, fontweight='bold')
@@ -1250,6 +1435,30 @@ def plot_graph_for_downstream_scores(save_folder,
                                      show_baseline = True,
                                      colours_dict = None, linestyle_dict=None,
                                      add_zoom = False, add_x_axis_breaks = False):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        save_folder: Parameter.
+        df_baseline: Parameter.
+        enc_df_dict: Parameter.
+        x_col_name: Parameter.
+        y_col_name: Parameter.
+        y_label: Parameter.
+        title: Parameter.
+        file_name: Parameter.
+        skip: Parameter.
+        max_line: Parameter.
+        set_upper_lim: Parameter.
+        set_lower_lim: Parameter.
+        show_baseline: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+        add_zoom: Parameter.
+        add_x_axis_breaks: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
 
     baseline_scores = df_baseline[y_col_name].to_numpy()
 
@@ -1387,7 +1596,6 @@ def plot_graph_for_downstream_scores(save_folder,
         plt.gca().add_collection(lc)
 
     # Set current axis
-    # Because plt.axes adds an Axes to the current figure and makes it the current Axes.
     # To set the current axes, where ax is the Axes object you'd like to become active:
     plt.sca(ax)
 
@@ -1417,6 +1625,29 @@ def plot_bar_graph_for_downstream_scores(save_folder,
                                      set_upper_lim = True, set_lower_lim = True,
                                      show_baseline = True,
                                      colours_dict = None, linestyle_dict=None, width=0.20):
+    """Create and display a plot for the requested metric(s).
+    
+    Args:
+        save_folder: Parameter.
+        df_baseline: Parameter.
+        enc_df_dict: Parameter.
+        x_col_name: Parameter.
+        y_col_name: Parameter.
+        y_label: Parameter.
+        title: Parameter.
+        file_name: Parameter.
+        skip: Parameter.
+        max_line: Parameter.
+        set_upper_lim: Parameter.
+        set_lower_lim: Parameter.
+        show_baseline: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+        width: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
 
     baseline_scores = df_baseline[y_col_name].to_numpy()
 
@@ -1502,7 +1733,6 @@ def plot_bar_graph_for_downstream_scores(save_folder,
     plt.xticks(fontsize=tick_size)#, labels=df['percentage_train'])#, rotation=45) #ticks=df['x_label'], labels=df['x_label'])
     plt.yticks(fontsize=tick_size)
 
-    # if show_baseline:
 
 
     # Make the tick lines bigger for all ticks
@@ -1534,6 +1764,21 @@ def write_results_for_methods_comparison_new_plots(save_folder, main_folders_lis
                                          colours_dict = None,
                                          linestyle_dict = None,
                                          baseline_folder = 'Baseline_444_Final'):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        save_folder: Parameter.
+        main_folders_list: Parameter.
+        names: Parameter.
+        encoder_percentage: Parameter.
+        show_baseline: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+        baseline_folder: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
 
@@ -1634,6 +1879,21 @@ def write_results_for_methods_comparison_new_plots_test_only(save_folder, main_f
                                          colours_dict = None,
                                          linestyle_dict = None,
                                          baseline_folder = 'Baseline_444_Final'):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        save_folder: Parameter.
+        main_folders_list: Parameter.
+        names: Parameter.
+        encoder_percentage: Parameter.
+        show_baseline: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+        baseline_folder: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
 
@@ -1734,6 +1994,21 @@ def write_results_for_methods_comparison(save_folder, main_folders_list, names, 
                                          colours_dict = None,
                                          linestyle_dict = None,
                                          bar_width = 0.20):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        save_folder: Parameter.
+        main_folders_list: Parameter.
+        names: Parameter.
+        encoder_percentage: Parameter.
+        show_baseline: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+        bar_width: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
 
@@ -1966,6 +2241,16 @@ def write_results_for_methods_comparison(save_folder, main_folders_list, names, 
 
 
 def write_avg_results_per_encoder_percentage(main_folder, title, baseline_folder='Baseline_444_Final'):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        main_folder: Parameter.
+        title: Parameter.
+        baseline_folder: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     plt.clf()
 
     exp_folders = os.listdir(main_folder)
@@ -2294,6 +2579,20 @@ def write_avg_results_per_encoder_percentage(main_folder, title, baseline_folder
 
 
 def write_results_for_methods_comparison_distributions(save_folder, main_folders_list, names, encoder_percentage, show_baseline = True, colours_dict = None, linestyle_dict = None):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        save_folder: Parameter.
+        main_folders_list: Parameter.
+        names: Parameter.
+        encoder_percentage: Parameter.
+        show_baseline: Parameter.
+        colours_dict: Parameter.
+        linestyle_dict: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     plt.clf()
 
     if not os.path.exists(save_folder):
@@ -2405,7 +2704,6 @@ def write_results_for_methods_comparison_distributions(save_folder, main_folders
                 flier.set(markeredgecolor=colour)
 
 
-        # if base_lines_pos is not None:
         #
         #             continue
         #
@@ -2419,6 +2717,21 @@ def write_results_for_methods_comparison_distributions(save_folder, main_folders
         plt.clf()
 
 def create_box_plot(save_path, data_lists, colours_list, x_label, y_label, x_ticks_list, base_lines = None, base_lines_pos = None):
+    """Create box plot.
+    
+    Args:
+        save_path: File or directory path.
+        data_lists: Parameter.
+        colours_list: Parameter.
+        x_label: Parameter.
+        y_label: Parameter.
+        x_ticks_list: Parameter.
+        base_lines: Parameter.
+        base_lines_pos: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
 
     fig, ax = plt.subplots()
     bplot = ax.boxplot(data_lists, patch_artist=False, labels=x_ticks_list, showmeans=True, meanline=True)
@@ -2454,6 +2767,14 @@ def create_box_plot(save_path, data_lists, colours_list, x_label, y_label, x_tic
 
 
 def get_baseline_EF_results_all(scores_folder):
+    """Get baseline ef results all.
+    
+    Args:
+        scores_folder: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     baseline_folder = os.path.join(scores_folder, 'Baseline')
     folders = os.listdir(baseline_folder)
 
@@ -2541,6 +2862,14 @@ def get_baseline_EF_results_all(scores_folder):
 
 
 def create_plots_for_downstream_percentage_EF_comparison(main_folder):
+    """Create plots for downstream percentage ef comparison.
+    
+    Args:
+        main_folder: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     plt.clf()
 
     baseline_res_ef_dict = get_baseline_EF_results_all(os.path.relpath('.'))
@@ -2657,23 +2986,61 @@ def create_plots_for_downstream_percentage_EF_comparison(main_folder):
 
 
 def write_list_to_json(list_data, folder, file_name, key):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        list_data: Parameter.
+        folder: Parameter.
+        file_name: Parameter.
+        key: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     dict1 = {key:list_data}
     file_name = os.path.join(folder, file_name)
     with open(file_name, 'w') as fp:
         json.dump(dict1, fp)
 
 def write_dict_to_json(dict_data, folder, file_name):
+    """Run a predefined set of comparisons and write plots to disk.
+    
+    Args:
+        dict_data: Parameter.
+        folder: Parameter.
+        file_name: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
     file_name = os.path.join(folder, file_name)
     with open(file_name, 'w') as fp:
         json.dump(dict_data, fp)
 
 def load_list_from_json(json_file, key):
+    """Load list from json.
+    
+    Args:
+        json_file: Parameter.
+        key: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     dict1 = None
     with open(json_file, 'r') as fp:
         dict1 = json.load(fp)
     return dict1[key]
 
 def load_json(json_file):
+    """Load json.
+    
+    Args:
+        json_file: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     dict1 = None
     with open(json_file, 'r') as fp:
         dict1 = json.load(fp)
@@ -2681,6 +3048,17 @@ def load_json(json_file):
 
 
 def get_list_of_images_and_labels_from_folder(images_path, images_folder_name, labels_folder_name, add_png_ext=True):
+    """Get list of images and labels from folder.
+    
+    Args:
+        images_path: File or directory path.
+        images_folder_name: Parameter.
+        labels_folder_name: Parameter.
+        add_png_ext: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     # The object just has names, so lets append path
 
     if images_path == None:
@@ -2714,6 +3092,14 @@ import concurrent.futures
 from multiprocessing import Pool
 
 def compute_mask_volume_single(model_output):
+    """Compute mask volume single.
+    
+    Args:
+        model_output: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
 
     mask = np.array(model_output)
     mask = mask[:, :, 0]
@@ -2730,6 +3116,14 @@ def compute_mask_volume_single(model_output):
     return (vol, poly_points, minmaxline, midpointline, segments)
 
 def compute_mask_volume_from_json_parallel(file):
+    """Compute mask volume from json parallel.
+    
+    Args:
+        file: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     vols_dict = {}
 
     raw_output_dict = load_json(file)
@@ -2745,6 +3139,14 @@ def compute_mask_volume_from_json_parallel(file):
     return vols_dict
 
 def compute_mask_volume_from_json(file):
+    """Compute mask volume from json.
+    
+    Args:
+        file: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
 
     vols_dict = {}
 
@@ -2775,6 +3177,14 @@ def compute_mask_volume_from_json(file):
     return vols_dict
 
 def compute_mask_volume_from_labels_folder(path):
+    """Compute mask volume from labels folder.
+    
+    Args:
+        path: File or directory path.
+    
+    Returns:
+        object: Return value.
+    """
     files = os.listdir(path)
 
     vols_dict = {}
@@ -2793,6 +3203,16 @@ def compute_mask_volume_from_labels_folder(path):
     return vols_dict
 
 def annotate_mask_disks(save_folder, consensus_images_path, vols_dict):
+    """Annotate mask disks.
+    
+    Args:
+        save_folder: Parameter.
+        consensus_images_path: File or directory path.
+        vols_dict: Parameter.
+    
+    Returns:
+        None: Return value.
+    """
 
     files = os.listdir(consensus_images_path)
 
@@ -2806,6 +3226,11 @@ def annotate_mask_disks(save_folder, consensus_images_path, vols_dict):
         cv2.imwrite(os.path.join(save_folder, file), img)
 
 def get_consensus_ratios():
+    """Get consensus ratios.
+    
+    Returns:
+        object: Return value.
+    """
     ratios_dict = {}
     with open('consensus_ratios.txt') as f:
         lines = f.readlines()
@@ -2818,6 +3243,14 @@ def get_consensus_ratios():
     return ratios_dict
 
 def calculate_consensus_ground_truth_volumes(consensus_dataset_path):
+    """Calculate consensus ground truth volumes.
+    
+    Args:
+        consensus_dataset_path: File or directory path.
+    
+    Returns:
+        object: Return value.
+    """
     vols_gt_dict = {}
     gt_file = os.path.join('.', 'consensus_ground_truth_volumes.json')
     if os.path.exists(gt_file):
@@ -2834,6 +3267,15 @@ def calculate_consensus_ground_truth_volumes(consensus_dataset_path):
     return vols_gt_dict
 
 def compute_ejection_fraction_consensus_set(main_folder, consensus_dataset_path):
+    """Compute ejection fraction consensus set.
+    
+    Args:
+        main_folder: Parameter.
+        consensus_dataset_path: File or directory path.
+    
+    Returns:
+        None: Return value.
+    """
     #Get the pixel ratios
     ratios_dict = get_consensus_ratios()
 
@@ -2926,6 +3368,15 @@ def compute_ejection_fraction_consensus_set(main_folder, consensus_dataset_path)
                                f'Consensus_EF_Vol_error_results.json')
 
 def compute_ejection_fraction_consensus_set_for_baseline(folder, consensus_dataset_path):
+    """Compute ejection fraction consensus set for baseline.
+    
+    Args:
+        folder: Parameter.
+        consensus_dataset_path: File or directory path.
+    
+    Returns:
+        tuple | list: Return value.
+    """
     #Get the pixel ratios
     ratios_dict = get_consensus_ratios()
 
@@ -2947,7 +3398,6 @@ def compute_ejection_fraction_consensus_set_for_baseline(folder, consensus_datas
         disks_file = os.path.join(folder, f'Consensus_disks_volumes.json')
 
         # # compare date of raw model output file file and disk file
-        # if model_output_date > disk_file_date:
 
         # compare date of raw model output file and disk file
         recreate_disk_file = False
@@ -2996,6 +3446,15 @@ def compute_ejection_fraction_consensus_set_for_baseline(folder, consensus_datas
     return avg_ef_error, avg_ED_vol_error, avg_ES_vol_error, count_no_ef
 
 def calc_ejection_fractions_and_errors(vols_ml_gt_dict, vols_ml_dict):
+    """Calc ejection fractions and errors.
+    
+    Args:
+        vols_ml_gt_dict: Parameter.
+        vols_ml_dict: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
 
     info_dict = {}
     info_dict_list = []
@@ -3119,6 +3578,15 @@ def calc_ejection_fractions_and_errors(vols_ml_gt_dict, vols_ml_dict):
 
 
 def convert_consensus_vols_to_ml(vols_dict, ratios_dict):
+    """Convert consensus vols to ml.
+    
+    Args:
+        vols_dict: Parameter.
+        ratios_dict: Parameter.
+    
+    Returns:
+        object: Return value.
+    """
     vols_ml_dict = {}
 
     for key, value in vols_dict.items():
@@ -3138,6 +3606,15 @@ def convert_consensus_vols_to_ml(vols_dict, ratios_dict):
 
 
 def calc_ejection_fraction(EDV, ESV):
+    """Calc ejection fraction.
+    
+    Args:
+        EDV: Parameter.
+        ESV: Parameter.
+    
+    Returns:
+        tuple | list: Return value.
+    """
 
     stroke_volume = abs(EDV - ESV)
     ejection_fraction = (stroke_volume / EDV) * 100.0
